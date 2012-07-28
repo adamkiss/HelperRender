@@ -1,36 +1,34 @@
 <?php
 
 /**
- * Template:: object
+ * Master:: object
  *
- * Template (HTML) generation helper; Autoloads single static Template:: object
+ * Template (HTML) generation helper; Autoloads single static Master:: object
  * to give us access to slightly advanced 'view' loading and variable passing
  * 
  * Created 2012 by Adam Kiss
  * Licensed under WTFPL (http://sam.zoy.org/wtfpl/)
  * 
  * http://www.adamkiss.com
- *
  */
 
-class HelperTemplate extends WireData implements Module {
+class HelperMaster extends WireData implements Module {
 
 	/**
 	 * Z informationz
 	 *
 	 * @return array
-	 *
 	 */
 	public static function getModuleInfo() {
 
 		return array(
-			'title' => 'Template::',
-			'version' => 001, 
+			'title' => 'Master::',
+			'version' => 002, 
 			'summary' => 'Advanced templating – Including self-encapsulated views and passing variables to them has never been easier',
 			'href' => 'http://www.adamkiss.com',
 			'singular' => true, 
 			'autoload' => true, 
-			);
+		);
 	}
 
 	// We don't really need to do anything else here; this file is now autoloaded
@@ -40,10 +38,5 @@ class HelperTemplate extends WireData implements Module {
 	// booyah!
 }
 
-class Template {
-
-	public static function booyah() {
-
-	}
-	
-}
+require "HelperMaster_Template.php";
+require "HelperMaster_Master.php";
