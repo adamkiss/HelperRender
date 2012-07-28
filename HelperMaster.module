@@ -6,10 +6,12 @@
  * Template (HTML) generation helper; Autoloads single static Master:: object
  * to give us access to slightly advanced 'view' loading and variable passing
  * 
- * Created 2012 by Adam Kiss
- * Licensed under WTFPL (http://sam.zoy.org/wtfpl/)
+ * @author Adam Kiss
+ * @version 0.0.1
+ * @since 2012-06-28
+ * @license WTFPL <http://sam.zoy.org/wtfpl/>
  * 
- * http://www.adamkiss.com
+ * @link http://www.adamkiss.com
  */
 
 class HelperMaster extends WireData implements Module {
@@ -38,5 +40,6 @@ class HelperMaster extends WireData implements Module {
 	// booyah!
 }
 
+// Include all the important stuff
 require "HelperMaster_Template.php";
 require "HelperMaster_Master.php";
