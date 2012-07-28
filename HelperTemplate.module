@@ -39,3 +39,11 @@ class HelperTemplate extends WireData implements Module {
 	//
 	// booyah!
 }
+
+class Template {
+
+	public static function booyah() {
+
+	}
+	
+}
