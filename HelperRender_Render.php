@@ -22,7 +22,7 @@ class Render {
 
 	/////////////////////////////// TEMPLATE RENDERING ///////////////////////////////
 
-	public static function renderPartial($fileName, $data = array()){
+	public static function partial($fileName, $data = array()){
 		$partial = new HRTemplate($fileName);
 		$partial->addData(true, $data);
 		return $partial->render();
@@ -33,7 +33,7 @@ class Render {
 	 *
 	 * @return contents of the master template
 	 */
-	public static function renderLoop($fileName, $data = array(), $separatorFileName = false){
+	public static function loop($fileName, $data = array(), $separatorFileName = false){
 
 		$loopItem = new HRTemplate($fileName);
 		$loopSeparator = ($separatorFileName) ? new HRTemplate($separatorFileName) : false;
@@ -56,7 +56,7 @@ class Render {
 		return implode('', $result);
 	}
 
-	public static function renderCollection($fileName, $collection, $separatorFileName = false){
+	public static function collection($fileName, $collection, $separatorFileName = false){
 		$collectionArray = array();
 		foreach($collection as $collectionItem) { $collectionArray []= array('item'=>$collectionItem); }
 		return self::renderLoop($fileName, $collectionArray, $separatorFileName);
@@ -69,7 +69,7 @@ class Render {
 	 *
 	 * @return contents of the master template
 	 */
-	public static function output() {
+	public static function master() {
 		return self::$masterTemplate->render();
 	}
 
