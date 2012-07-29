@@ -1,4 +1,4 @@
-# Master::
+# Render:: v0.5.0
 
 This is is simple module, that autoloads a single static class Master::, which then gives programmer access to simpler work with templates: `view loading`, `stylesheets and scripts loading`, `template stacking` and else.
 

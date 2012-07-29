@@ -14,7 +14,7 @@
  * @link http://www.adamkiss.com
  */
 
-class HelperMaster extends WireData implements Module {
+class HelperRender extends WireData implements Module {
 
 	/**
 	 * Z informationz
@@ -23,7 +23,7 @@ class HelperMaster extends WireData implements Module {
 	 */
 	public static function getModuleInfo() {
 		return array(
-			'title' => 'Master::',
+			'title' => 'Render::',
 			'version' => 50, 
 			'summary' => 'Advanced templating – Including self-encapsulated views and passing variables to them has never been easier',
 			'href' => 'http://www.adamkiss.com',
@@ -46,5 +46,5 @@ class HelperMaster extends WireData implements Module {
 }
 
 // Include all the important stuff
-require "HelperMaster_Template.php";
-require "HelperMaster_Master.php";
+require "HelperRender_Template.php";
+require "HelperRender_Render.php";

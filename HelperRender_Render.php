@@ -6,7 +6,7 @@
  * @since 2012-06-28
  */
 
-class Master {
+class Render {
 
 	/////////////////////////////////// VARIABLES /////////////////////////////////////
 
@@ -17,13 +17,13 @@ class Master {
 
 	public static function init($view = false){
 		// create singe master template
-		self::$masterTemplate = new HMTemplate($view ? $view : $default_view);
+		self::$masterTemplate = new HRTemplate($view ? $view : $default_view);
 	}
 
 	/////////////////////////////// TEMPLATE RENDERING ///////////////////////////////
 
 	public static function renderPartial($fileName, $data = array()){
-		$partial = new HMTemplate($fileName);
+		$partial = new HRTemplate($fileName);
 		$partial->addData(true, $data);
 		return $partial->render();
 	}
@@ -35,8 +35,8 @@ class Master {
 	 */
 	public static function renderLoop($fileName, $data = array(), $separatorFileName = false){
 
-		$loopItem = new HMTemplate($fileName);
-		$loopSeparator = ($separatorFileName) ? new HMTemplate($separatorFileName) : false;
+		$loopItem = new HRTemplate($fileName);
+		$loopSeparator = ($separatorFileName) ? new HRTemplate($separatorFileName) : false;
 		$result = array(); $count = 0; $itemsCount = count($data);
 
 		foreach ($data as $item){
