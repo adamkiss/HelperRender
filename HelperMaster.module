@@ -24,7 +24,7 @@ class HelperMaster extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Master::',
-			'version' => 002, 
+			'version' => 50, 
 			'summary' => 'Advanced templating – Including self-encapsulated views and passing variables to them has never been easier',
 			'href' => 'http://www.adamkiss.com',
 			'singular' => true, 

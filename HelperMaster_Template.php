@@ -21,6 +21,12 @@ class HMTemplate {
 	private
 		$view = null;
 
+	///////////////////////////////////// CREATE //////////////////////////////////////////
+
+	public function __construct($fileName){
+		$this->view = Wire::getFuel('config')->paths->views . $fileName . '.php';
+	}
+
 	/////////////////////////////// DATA MANIPULATION /////////////////////////////////////
 	
 	/**
@@ -92,8 +98,12 @@ class HMTemplate {
 		}
 	}
 
-	/////////////////////////////// VIEW MANIPULATION /////////////////////////////////////
-
+	/**
+	 * Removes all data (replaces actual $data array with empty one)
+	 */
+	public function removeAllData(){
+		$this->data = array();
+	}
 
 	///////////////////////////////// RENDER METHOD /////////////////////////////////////
 
