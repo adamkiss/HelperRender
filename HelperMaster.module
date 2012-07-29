@@ -22,7 +22,6 @@ class HelperMaster extends WireData implements Module {
 	 * @return array
 	 */
 	public static function getModuleInfo() {
-
 		return array(
 			'title' => 'Master::',
 			'version' => 002, 
@@ -31,6 +30,12 @@ class HelperMaster extends WireData implements Module {
 			'singular' => true, 
 			'autoload' => true, 
 		);
+	}
+
+	public function init(){
+		// add views path to PW Config object
+		$config = Wire::getFuel('config');
+		$config->paths->views = $config->paths->root . 'site/views/';
 	}
 
 	// We don't really need to do anything else here; this file is now autoloaded
