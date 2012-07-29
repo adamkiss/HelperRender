@@ -59,7 +59,7 @@ class Render {
 	public static function collection($fileName, $collection, $separatorFileName = false){
 		$collectionArray = array();
 		foreach($collection as $collectionItem) { $collectionArray []= array('item'=>$collectionItem); }
-		return self::renderLoop($fileName, $collectionArray, $separatorFileName);
+		return self::loop($fileName, $collectionArray, $separatorFileName);
 	}
 
 	///////////////////////////////////// OUTPUT /////////////////////////////////////
