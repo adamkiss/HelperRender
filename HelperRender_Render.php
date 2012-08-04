@@ -10,11 +10,22 @@ class Render {
 
 	/////////////////////////////////// VARIABLES /////////////////////////////////////
 
-	private static $default_view = 'masters/default';
+	/**
+	 * Default view to be used (if no other master is used)
+	 */
+	private static $default_view = 'views/_masters/default';
+	/**
+	 * Master Template object
+	 */
 	private static $masterTemplate = null;
 
 	////////////////////////////////// SINGLETON INIT /////////////////////////////////
 
+	/**
+	 * Init function – initializes master template object, based on optional parameter
+	 *
+	 * @param string $view   optional view to be used as 'master'
+	 */
 	public static function init($view = false){
 		// create singe master template
 		self::$masterTemplate = new HRTemplate($view ? $view : $default_view);
@@ -22,6 +33,13 @@ class Render {
 
 	/////////////////////////////// TEMPLATE RENDERING ///////////////////////////////
 
+	/**
+	 * Renders template with data, returns it as a string
+	 *
+	 * @param string $fileName   file name of template
+	 * @param string $data       data to be used to render the partial
+	 * @return string            the template content (with variables replaced)
+	 */
 	public static function partial($fileName, $data = array()){
 		$partial = new HRTemplate($fileName);
 		$partial->addData(true, $data);
@@ -29,9 +47,25 @@ class Render {
 	}
 
 	/**
-	 * Renders template with set of items
+	 * Renders 'auto' template – file is 'views/{ProcessWire template}.php' and only variable populated is $page
 	 *
-	 * @return contents of the master template
+	 * @return string            the template content (with variables replaced)
+	 */
+	public static function auto(){
+		// populate '$page'
+		$page = Wire::getFuel('page');
+
+		// return ::partial populated with correct values
+		return self::partial($page->template, array('page'=>$page));
+	}
+
+	/**
+	 * Renders looped template with data and optional separator file, returns it as a string
+	 *
+	 * @param string $fileName               file name of template
+	 * @param string $data                   data to be used to render the partial
+	 * @param string $separatorFileName      data to be used to render the partial
+	 * @return string                        the template content (with variables replaced)
 	 */
 	public static function loop($fileName, $data = array(), $separatorFileName = false){
 

@@ -23,6 +23,11 @@ class HRTemplate {
 
 	///////////////////////////////////// CREATE //////////////////////////////////////////
 
+	/**
+	 * Constructor
+	 *
+	 * @param string $fileName   Name of the view file to be used
+	 */
 	public function __construct($fileName){
 		$this->view = Wire::getFuel('config')->paths->views . $fileName . '.php';
 	}
@@ -113,13 +118,13 @@ class HRTemplate {
 	 * @return string Contents of a view (with data supplied)
 	 */
 	function render(){
-		 //init
+		//init
 		$renderResult = '';
 		ob_start();
 
 			// prepare variables and include template
 			foreach ($this->data as $k=>$v){ $$k = $v;	}
-			include ($this->view);
+			require ($this->view);
 
 			// get the result and close the buffer
 			$renderResult = ob_get_contents();

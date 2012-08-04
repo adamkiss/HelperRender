@@ -24,7 +24,7 @@ class HelperRender extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Render::',
-			'version' => 50, 
+			'version' => 80, 
 			'summary' => 'Advanced templating – Including self-encapsulated views and passing variables to them has never been easier',
 			'href' => 'http://www.adamkiss.com',
 			'singular' => true, 

@@ -1,4 +1,4 @@
-# Render:: v0.5.0
+# Render:: v0.8.0
 
 This is is simple module, that autoloads a single static class Master::, which then gives programmer access to simpler work with templates: `view loading`, `stylesheets and scripts loading`, `template stacking` and else.
 
@@ -8,7 +8,7 @@ I despise dealing with templates (as in: html templates) in ProcessWire template
 
 ## Documentation?
 
-This is pretty much just an idea I has. More documentation/information to come.
+Documentation seems to be the last thing missing :) Working on it.
 
 ---
 Created 2012 by Adam Kiss
