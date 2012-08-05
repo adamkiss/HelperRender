@@ -2,7 +2,7 @@
 
 /**
  * @author Adam Kiss
- * @version 0.0.1
+ * @version 0.8.0
  * @since 2012-06-28
  */
 
@@ -13,7 +13,7 @@ class Render {
 	/**
 	 * Default view to be used (if no other master is used)
 	 */
-	private static $default_view = 'views/_masters/default';
+	private static $default_view = '_master/application';
 	/**
 	 * Master Template object
 	 */
@@ -28,7 +28,42 @@ class Render {
 	 */
 	public static function init($view = false){
 		// create singe master template
-		self::$masterTemplate = new HRTemplate($view ? $view : $default_view);
+		self::$masterTemplate = new HRTemplate($view ? $view : self::$default_view);
+	}
+
+	///////////////////////////////// PAGE EXTRACTION ////////////////////////////////
+
+	/**
+	 * Extracts the fields (and custom values assigned via getChanges()) from $page and returns
+	 * as an array prepared for inclusion in the render functions
+	 *
+	 * @param Page $page        page to have data extracted from
+	 * @return array            array of values in the page
+	 */
+	private static function extractValues(Page $page){
+		$data = array();
+
+		// first: get fields
+		foreach($page->template->fields as $field){
+			$data[$field->name] = $page->get($field->name);
+			if(
+				$field->type instanceof FieldtypeDatetime
+			||$field->type instanceof FieldtypePageTitle
+			||$field->type instanceof FieldtypeText
+			||$field->type instanceof FieldtypeTextarea
+			){
+				$data[$field->name.'_UF'] = $page->getUnformatted($field->name);
+			}
+		}
+
+		// second: get 'data' and filter custom values
+		foreach ($page->getChanges() as $key){
+			if(!array_key_exists($key, $data)) {
+				$data[$key] = $page->get($key);
+			}
+		}
+
+		return $data;
 	}
 
 	/////////////////////////////// TEMPLATE RENDERING ///////////////////////////////
@@ -46,17 +81,9 @@ class Render {
 		return $partial->render();
 	}
 
-	/**
-	 * Renders 'auto' template – file is 'views/{ProcessWire template}.php' and only variable populated is $page
-	 *
-	 * @return string            the template content (with variables replaced)
-	 */
-	public static function auto(){
-		// populate '$page'
+	public static function page(){
 		$page = Wire::getFuel('page');
-
-		// return ::partial populated with correct values
-		return self::partial($page->template, array('page'=>$page));
+		return self::partial($page->template, self::extractValues($page));
 	}
 
 	/**
@@ -101,10 +128,22 @@ class Render {
 	/**
 	 * Renders the master and returns it as a string
 	 *
+	 * @param array $data data to be pushed into the master
 	 * @return contents of the master template
 	 */
-	public static function master() {
+	public static function master( $data = array() ) {
+		self::$masterTemplate->addData(true, $data);
 		return self::$masterTemplate->render();
 	}
 
+	/**
+	 * Auto-renders master with $page fields in the $content
+	 *
+	 * @param array $additionalData     optional data (good to use if you want 'auto' way, but need more data)
+	 */
+	public static function auto($additionalData = array()){
+		self::init();
+		$autoMasterData = array_merge(array('content'=>Render::page()), $additionalData);
+		echo self::master($autoMasterData);
+	}
 }

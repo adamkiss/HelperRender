@@ -2,7 +2,7 @@
 
 /**
  * @author Adam Kiss
- * @version 0.0.1
+ * @version 0.8.0
  * @since 2012-06-28
  */
 
