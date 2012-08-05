@@ -105,5 +105,4 @@ This is a list of features I plan to implement as I go.
 * Create Render::add() function, so developer doesn't have to pass all data as array when calling Render::master()
 
 ---
-Created in 2012 by Adam Kiss
-Licensed under WTFPL (http://sam.zoy.org/wtfpl/)
+Created in 2012 by Adam Kiss • Licensed under WTFPL (http://sam.zoy.org/wtfpl/)
