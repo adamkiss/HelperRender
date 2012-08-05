@@ -64,22 +64,27 @@ Very simple. This module consists of 4 files:
 
 note: parameters marked (opt) are optional
 
-`Render::init`, parameters: `(opt) string $view`
+#### Render::init
+parameters: `(opt) string $view`  
 Initializes the master template. If $view is given, it is used as master template. If not, default master template (defaulting to `_master/application`) is used.
 
-`Render::master`, parameters: `(opt) array $data`, returns: `string`
+#### Render::master
+parameters: `(opt) array $data`, returns: `string`  
 Core function. Renders the master template and returns it as a string.
 
-`Render::partial`, parameters: `string $fileName, (opt) array $data`, returns: `string`
+#### Render::partial
+parameters: `string $fileName, (opt) array $data`, returns: `string`  
 Renders simple partial by `$fileName`*, given the data in the $data array.
 
-`Render::page`, returns: `string`
+#### Render::page
+returns: `string`  
 Renders simple partial; as template filename is used name of current template, data is extracted from current page ('autmagically')
 
-`Render::loop`, parameters: `string $fileName, (opt) array $data, (opt) string $separatorFileName`, returns: `string`
+#### Render::loop
+parameters: `string $fileName, (opt) array $data, (opt) string $separatorFileName`, returns: `string`  
 Renders collection of partials and returns it as a string. Data passed should be an array of items, which are then **passed to the single collection item as** `$item`. Optionally, you can pass a `$separatorFileName`, a name of a view that should be used between the items as a separator. In both template and separator template, you get additional variable `$HM_Count`, which has the number of an item in it.
 
-`Render::auto()`
+#### Render::auto
 Simplest possible usage, good for articles for instance; Uses default master template, which is given variable 'content', cotaining render of a `/site/views/{page template}.php`, which was given all the fields of page.
 
 ## TODO
