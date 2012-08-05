@@ -91,11 +91,11 @@ Simplest possible usage, good for articles for instance; Uses default master tem
 
 This is a list of features I plan to implement as I go.
 
-* ~~Inclusion of partials~~ – done in v0.3.0
-* ~~Auto extraction of page variables (fields+changes)~~ – done in v0.5.0
-* ~~Auto extraction of unformatted page variable~~ – done in v0.5.1
-* ~~Inclusion of collections~~ – done in v0.3.0
-* ~~Inclusion of collections with separators~~ – done in v0.6.0
+* ~~Inclusion of partials~~ – done in **v0.3.0**
+* ~~Auto extraction of page variables (fields+changes)~~ – done in **v0.5.0**
+* ~~Auto extraction of unformatted page variable~~ – done in **v0.5.1**
+* ~~Inclusion of collections~~ – done in **v0.3.0**
+* ~~Inclusion of collections with separators~~ – done in **v0.6.0**
 * Inclusion of collection with variables informing developer where in the array he is (HR_first, HR_last, HR_odd, HR_even)
 * Inclusion of collections with separators included in partials (to be not shown if HR_last)
 * Force `render::collection` to expect array of arrays, which will be then extracted as variables
