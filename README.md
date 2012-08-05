@@ -20,6 +20,7 @@ Following example will render `$page->title` followed by `p.special` with conten
 
 /site/templates/Home.php
 ``` php
+<?php
   Render::init();
   $page->specialValue = 'anything';
   Render::master(array(
@@ -36,8 +37,8 @@ Following example will render `$page->title` followed by `p.special` with conten
 
 /site/views/Home.php
 ``` html
-	<h1><?= $title ?></h1>
-	<p class="special"><?= $specialValue ?></p>
+  <h1><?= $title ?></h1>
+  <p class="special"><?= $specialValue ?></p>
   <?= $body ?>
 ```
 
