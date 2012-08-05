@@ -1,6 +1,6 @@
 # Render:: v0.8.0 (beta)
 
-This is is simple module, that autoloads a single static class Master::, which then gives programmer access to simpler work with templates: `view loading`, `template stacking` and else.
+This is is simple module, that autoloads a single static class Master::, which then gives programmer access to simpler work with templates: `view loading`, `template stacking` and more.
 
 ## Why?
 
@@ -12,15 +12,14 @@ There is a lot of testing ahead – what features are missing, which are illogic
 
 * When you pass a data array to the function, it has to be **associative** array. All values are then available as variables under their respective keys
 * All filename parameters are relative to `/site/views/` and **without trialing .php**, so if you want to use e.g. `/site/views/_master/application.php`, the parameters is `_master/application`
-* For available functions see Documentation – Methods section
+* For available functions see [#methods](Documentation – Methods section)
 
 ## Example
 
 Following example will render `$page->title` followed by `p.special` with content '**anything**' and followed by `$page->body`
 
 /site/templates/Home.php
-```
-<?php
+``` php
   Render::init();
   $page->specialValue = 'anything';
   Render::master(array(
@@ -29,14 +28,14 @@ Following example will render `$page->title` followed by `p.special` with conten
 ```
 
 /site/views/_master/application.php
-```
+``` html
    <html><body>
      <?= $content ?>
    </body></html>
 ```
 
 /site/views/Home.php
-```
+``` html
 	<h1><?= $title ?></h1>
 	<p class="special"><?= $specialValue ?></p>
   <?= $body ?>
