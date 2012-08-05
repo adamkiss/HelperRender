@@ -12,7 +12,7 @@ There is a lot of testing ahead – what features are missing, which are illogic
 
 * When you pass a data array to the function, it has to be **associative** array. All values are then available as variables under their respective keys
 * All filename parameters are relative to `/site/views/` and **without trialing .php**, so if you want to use e.g. `/site/views/_master/application.php`, the parameters is `_master/application`
-* For available functions see [#methods](Documentation – Methods section)
+* For available functions see [Documentation – Methods section](#methods)
 
 ## Example
 
