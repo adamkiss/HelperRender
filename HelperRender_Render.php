@@ -40,7 +40,7 @@ class Render {
 	 * @param Page $page        page to have data extracted from
 	 * @return array            array of values in the page
 	 */
-	private static function extractValues(Page $page){
+	public static function extractValues(Page $page){
 		$data = array();
 
 		// first: get fields
@@ -132,6 +132,9 @@ class Render {
 	 * @return contents of the master template
 	 */
 	public static function master( $data = array() ) {
+		//make init option: if file wasn't initialized, initialize it for developer
+		if (!self::$masterTemplate) { self::init(); }
+
 		self::$masterTemplate->addData(true, $data);
 		return self::$masterTemplate->render();
 	}

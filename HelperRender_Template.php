@@ -123,7 +123,7 @@ class HRTemplate {
 		ob_start();
 
 			// prepare variables and include template
-			foreach ($this->data as $k=>$v){ $$k = $v;	}
+			foreach ($this->data as $k=>$v){ $$k = $v; }
 			require ($this->view);
 
 			// get the result and close the buffer

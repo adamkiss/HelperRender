@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Master:: object
+ * Render:: object
  *
- * Template (HTML) generation helper; Autoloads single static Master:: object
+ * Template (HTML) generation helper; Autoloads single static Render:: object
  * to give us access to slightly advanced 'view' loading and variable passing
  * 
  * @author Adam Kiss
- * @version 0.8.0
+ * @version 0.8.1
  * @since 2012-06-28
  * @license WTFPL <http://sam.zoy.org/wtfpl/>
  * 
@@ -24,7 +24,7 @@ class HelperRender extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Render::',
-			'version' => 80, 
+			'version' => 81, 
 			'summary' => 'Advanced templating – Including self-encapsulated views and passing variables to them has never been easier',
 			'href' => 'http://www.adamkiss.com',
 			'singular' => true, 
