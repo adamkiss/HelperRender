@@ -18,6 +18,10 @@ class Render {
 	 * Master Template object
 	 */
 	private static $masterTemplate = null;
+	/**
+	 * Global variables (to be included in each render:: call throughout request)
+	 */
+	private static $render_global = null;
 
 	////////////////////////////////// SINGLETON INIT /////////////////////////////////
 
@@ -29,6 +33,48 @@ class Render {
 	public static function init($view = false){
 		// create singe master template
 		self::$masterTemplate = new HRTemplate($view ? $view : self::$default_view);
+	}
+
+	//////////////////////////////// GLOBAL VARIABLES ////////////////////////////////
+	
+	/**
+	 * Adds single item to the global variables array
+	 *
+	 * @param string $key      key, under which the $value is saved
+	 * @param mixed $value     piece of data to be saved
+	 * 
+	 */
+	private static function add_global_variable($key, $value){
+		if (!array_key_exists($key, self::$render_global)) {
+			self::$render_global[$key] = $value;
+		} else {
+			trigger_error('Render::add_global: You can\'t overwrite existing global key',E_WARNING);
+		}
+	}
+
+
+	/**
+	 * Adds variables to array of global values (issues warning if it exists already)
+	 *
+	 * @param string|array $var   if string, it acts as a key in globals, array
+	 */
+	public static function add_global($var, $value=null){
+		// passed: array of values to add
+		if (is_array($var)){
+			foreach($var as $key=>$value){
+				self::add_global_vaiable($key, $value);
+			}
+			// give programmer notice of incorrect usage
+			if (!is_null($value)){ trigger_error('Render::add_global: $value not null, while $var is array. Incorrect data?', E_NOTICE); }
+
+		// passed: key/value combo
+		}else if (is_string($var)&&is_null($value)){
+			self::add_global_vaiable($var, $value);
+
+		// anything else
+		}else{
+			throw new WireException('Incorrect data passed to Render::add_global(string|array $var, mixed $value)');
+		}
 	}
 
 	///////////////////////////////// PAGE EXTRACTION ////////////////////////////////
