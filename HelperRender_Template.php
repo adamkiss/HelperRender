@@ -122,6 +122,9 @@ class HRTemplate {
 		$renderResult = '';
 		ob_start();
 
+			// add global data
+			$this->data = array_merge(Render::globals(), $this->data);
+
 			// prepare variables and include template
 			foreach ($this->data as $k=>$v){ $$k = $v; }
 			require ($this->view);

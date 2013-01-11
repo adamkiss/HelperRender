@@ -13,15 +13,19 @@ class Render {
 	/**
 	 * Default view to be used (if no other master is used)
 	 */
-	private static $default_view = '_master/application';
+	private static $default_view = '_master/application';	
 	/**
 	 * Master Template object
 	 */
 	private static $masterTemplate = null;
 	/**
+	 * Master variables (to be included in master call (even before it ))
+	 */
+	private static $render_master_variables = array();
+	/**
 	 * Global variables (to be included in each render:: call throughout request)
 	 */
-	private static $render_global = null;
+	private static $render_globals = array();
 
 	////////////////////////////////// SINGLETON INIT /////////////////////////////////
 
@@ -35,6 +39,56 @@ class Render {
 		self::$masterTemplate = new HRTemplate($view ? $view : self::$default_view);
 	}
 
+	//////////////////////////////// MASTER VARIABLES ////////////////////////////////
+	
+	/**
+	 * Adds single item to the global variables array
+	 *
+	 * @param string $key      key, under which the $value is saved
+	 * @param mixed $value     piece of data to be saved
+	 * 
+	 */
+	private static function add_master_variable($key, $value){
+		if (!array_key_exists($key, self::$render_master_variables)) {
+			self::$render_master_variables[$key] = $value;
+		} else {
+			trigger_error('Render::add_master_variable: You can\'t overwrite existing global key',E_WARNING);
+		}
+	}
+
+	/**
+	 * Adds variables to array of global values (issues warning if it exists already)
+	 *
+	 * @param string|array $var   if string, it acts as a key in globals, array
+	 */
+	public static function add_master($var, $value=null){
+		// passed: array of values to add
+		if (is_array($var)){
+			foreach($var as $key=>$value){
+				self::add_master_variable($key, $value);
+			}
+			// give programmer notice of incorrect usage
+			if (!is_null($value)){ trigger_error('Render::add_master: $value not null, while $var is array. Incorrect data?', E_NOTICE); }
+
+		// passed: key/value combo
+		}else if (is_string($var)&&!is_null($value)){
+			self::add_master_variable($var, $value);
+
+		// anything else
+		}else{
+			throw new WireException('Incorrect data passed to Render::add_master(string|array $var, mixed $value)');
+		}
+	}
+
+	/**
+	 * Returns global variables' array
+	 *
+	 * @return array Render::$render_global
+	 */
+	public static function master_variables(){
+		return self::$render_master_variables;
+	}
+
 	//////////////////////////////// GLOBAL VARIABLES ////////////////////////////////
 	
 	/**
@@ -45,13 +99,12 @@ class Render {
 	 * 
 	 */
 	private static function add_global_variable($key, $value){
-		if (!array_key_exists($key, self::$render_global)) {
-			self::$render_global[$key] = $value;
+		if (!array_key_exists($key, self::$render_globals)) {
+			self::$render_globals[$key] = $value;
 		} else {
 			trigger_error('Render::add_global: You can\'t overwrite existing global key',E_WARNING);
 		}
 	}
-
 
 	/**
 	 * Adds variables to array of global values (issues warning if it exists already)
@@ -62,19 +115,28 @@ class Render {
 		// passed: array of values to add
 		if (is_array($var)){
 			foreach($var as $key=>$value){
-				self::add_global_vaiable($key, $value);
+				self::add_global_variable($key, $value);
 			}
 			// give programmer notice of incorrect usage
 			if (!is_null($value)){ trigger_error('Render::add_global: $value not null, while $var is array. Incorrect data?', E_NOTICE); }
 
 		// passed: key/value combo
-		}else if (is_string($var)&&is_null($value)){
-			self::add_global_vaiable($var, $value);
+		}else if (is_string($var)&&!is_null($value)){
+			self::add_global_variable($var, $value);
 
 		// anything else
 		}else{
 			throw new WireException('Incorrect data passed to Render::add_global(string|array $var, mixed $value)');
 		}
+	}
+
+	/**
+	 * Returns global variables' array
+	 *
+	 * @return array Render::$render_global
+	 */
+	public static function globals(){
+		return self::$render_globals;
 	}
 
 	///////////////////////////////// PAGE EXTRACTION ////////////////////////////////
@@ -127,9 +189,11 @@ class Render {
 		return $partial->render();
 	}
 
-	public static function page(){
+	public static function page($additional_data = array()){
 		$page = Wire::getFuel('page');
-		return self::partial($page->template, self::extractValues($page));
+		return self::partial($page->template,
+			array_merge(self::extractValues($page), $additional_data)
+		);
 	}
 
 	/**
@@ -165,7 +229,9 @@ class Render {
 
 	public static function collection($fileName, $collection, $separatorFileName = false){
 		$collectionArray = array();
-		foreach($collection as $collectionItem) { $collectionArray []= array('item'=>$collectionItem); }
+		foreach($collection as $collectionItem) {
+			$collectionArray []= array('item'=>$collectionItem);
+		}
 		return self::loop($fileName, $collectionArray, $separatorFileName);
 	}
 
@@ -182,17 +248,19 @@ class Render {
 		if (!self::$masterTemplate) { self::init(); }
 
 		self::$masterTemplate->addData(true, $data);
+		self::$masterTemplate->addData(true, self::$render_master_variables);
 		return self::$masterTemplate->render();
 	}
 
 	/**
-	 * Auto-renders master with $page fields in the $content
+	 * Auto-renders master with $page fields in the $content, with possible additional data
 	 *
 	 * @param array $additionalData     optional data (good to use if you want 'auto' way, but need more data)
 	 */
 	public static function auto($additionalData = array()){
 		self::init();
-		$autoMasterData = array_merge(array('content'=>Render::page()), $additionalData);
-		echo self::master($autoMasterData);
+		echo self::master(array(
+			'content'=>Render::page($additionalData)
+		));
 	}
 }
