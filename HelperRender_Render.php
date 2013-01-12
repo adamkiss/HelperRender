@@ -158,7 +158,7 @@ class Render {
    * @param Page $page        page to have data extracted from
    * @return array            array of values in the page
    */
-  public static function extractValues(Page $page){
+  public static function extract_values(Page $page){
     $data = array();
 
     // first: get fields
@@ -206,7 +206,7 @@ class Render {
   public static function page($additional_data=array(), $filename=null){
     $page = Wire::getFuel('page');
     return self::partial(is_null($filename) ? $page->template : $filename,
-      array_merge(self::extractValues($page), $additional_data), false
+      array_merge(self::extract_values($page), $additional_data), false
     );
   }
 
@@ -218,22 +218,35 @@ class Render {
    * @param string $separatorFileName      data to be used to render the partial
    * @return string                        the template content (with variables replaced)
    */
-  public static function loop($filename, $data = array(), $separatorFileName = false){
+  public static function loop($filename, $data = array(), $object_name='item', $separator_filename = false){
 
-    $loopItem = new HRTemplate($filename);
-    $loopSeparator = ($separatorFileName) ? new HRTemplate($separatorFileName) : false;
-    $result = array(); $count = 0; $itemsCount = count($data);
+    $loop_item = new TemplateFile(self::get_file($filename));
+    $loop_separator = ($separator_filename) ?
+      new TemplateFile(self::get_file($separator_filename)) : false;
+    $result = array(); $count = 0; $items_count = count($data);
 
     foreach ($data as $item){
       
-      $loopItem->removeAllData();
-      $loopItem->addData(true, $item);
-      $loopItem->addData(false, 'HM_Count', ++$count);
-      $result []= $loopItem->render();
+      $loop_item->setArray(array(
+        $object_name => $item,
+        $object_name.'_first' => ++$count === 1,
+        $object_name.'_last'  => $count === $items_count,
+        $object_name.'_odd'   => $count % 2 === 1,
+        $object_name.'_even'  => $count % 2 === 0,
+        $object_name.'_count' => $item_count,
+        $object_name.'_nr'    => $count
+      ));
+      $result []= $loop_item->render();
 
-      if($loopSeparator && $count < $itemsCount) {
-        $loopSeparator->addData(false, 'HM_Count', $count);
-        $result []= $loopSeparator->render();
+      if($loop_separator && ($count < $items_count)) {
+        $loop_item->setArray(array(
+          $object_name => $item,
+          $object_name.'_odd'   => $count % 2 === 1,
+          $object_name.'_even'  => $count % 2 === 0,
+          $object_name.'_count' => $item_count,
+          $object_name.'_nr'    => $count
+        ));
+        $result []= $loop_separator->render();
       }
 
     }
@@ -241,12 +254,8 @@ class Render {
     return implode('', $result);
   }
 
-  public static function collection($filename, $collection, $separatorFileName = false){
-    $collectionArray = array();
-    foreach($collection as $collectionItem) {
-      $collectionArray []= array('item'=>$collectionItem);
-    }
-    return self::loop($filename, $collectionArray, $separatorFileName);
+  public static function collection($filename, $collection, $object_name = 'item'$separator_filename = false){
+    return self::loop($filename, $collection, $object_name, $separator_filename);
   }
 
   ///////////////////////////////////// OUTPUT /////////////////////////////////////
@@ -257,13 +266,15 @@ class Render {
    * @param array $data data to be pushed into the master
    * @return contents of the master template
    */
-  public static function master( $data = array() ) {
+  public static function master($data = array(), $echo=true) {
     //make init option: if file wasn't initialized, initialize it for developer
-    if (!self::$masterTemplate) { self::init(); }
+    if (!self::$master_template) { self::init(); }
 
-    self::$masterTemplate->addData(true, $data);
-    self::$masterTemplate->addData(true, self::$render_master_variables);
-    return self::$masterTemplate->render();
+    self::$master_template->set('data', $data);
+    if ($echo)
+      echo self::$master_template->render();
+    else
+      return self::$master_template->render();
   }
 
   /**
@@ -271,10 +282,9 @@ class Render {
    *
    * @param array $additionalData     optional data (good to use if you want 'auto' way, but need more data)
    */
-  public static function auto($additionalData = array()){
-    self::init();
-    echo self::master(array(
-      'content'=>Render::page($additionalData)
+  public static function auto($additional_data = array(), $filename=null){
+    self::master(array(
+      'content'=>Render::page($additional_data, $filename)
     ));
   }
 }
