@@ -35,7 +35,8 @@ class HelperRender extends WireData implements Module {
 	public function init(){
 		// add views path to PW Config object
 		$config = Wire::getFuel('config');
-		$config->paths->views = $config->paths->root . 'site/views/';
+		if (!$config->paths->views)
+			$config->paths->views = $config->paths->root . 'site/views/';
 	}
 
 	// We don't really need to do anything else here; this file is now autoloaded
@@ -46,5 +47,4 @@ class HelperRender extends WireData implements Module {
 }
 
 // Include all the important stuff
-require "HelperRender_Template.php";
 require "HelperRender_Render.php";
