@@ -16,34 +16,53 @@
 
 class HelperRender extends WireData implements Module {
 
-	/**
-	 * Z informationz
-	 *
-	 * @return array
-	 */
-	public static function getModuleInfo() {
-		return array(
-			'title' => 'Render::',
-			'version' => 81, 
-			'summary' => 'Advanced templating – Including self-encapsulated views and passing variables to them has never been easier',
-			'href' => 'http://www.adamkiss.com',
-			'singular' => true, 
-			'autoload' => true, 
-		);
-	}
+  /**
+   * Z informationz
+   *
+   * @return array
+   */
+  public static function getModuleInfo() {
+    return array(
+      'title' => 'Render::',
+      'version' => 81, 
+      'summary' => 'Advanced templating – Including self-encapsulated views and passing variables to them has never been easier',
+      'href' => 'http://www.adamkiss.com',
+      'singular' => true, 
+      'autoload' => true, 
+    );
+  }
 
-	public function init(){
-		// add views path to PW Config object
-		$config = Wire::getFuel('config');
-		if (!$config->paths->views)
-			$config->paths->views = $config->paths->root . 'site/views/';
-	}
+  public function init(){
+    // add views path to PW Config object
+    $config = Wire::getFuel('config');
+    if (!$config->paths->views)
+      $config->paths->views = $config->paths->root . 'site/views/';
 
-	// We don't really need to do anything else here; this file is now autoloaded
-	// thus below we can add another object, that will be 'automagically' loaded
-	// for use in templates
-	//
-	// booyah!
+    // set Hook for page::load
+    $this->session->addHookBefore('Page::render', $this, 'load_global_file');
+  }
+
+  public function load_global_file(HookEvent $event){
+    $global_filename =
+      !is_null($this->config->render_options) &&
+      !is_null($this->config->render_options->global_file) ?
+        $this->config->render_options->global_file : '_global';
+    if(is_null($this->page->process)){
+      $global_file = new TemplateFile(
+        wire('config')->paths->templates.$global_filename.'.php'
+      );
+      $fuel = self::getAllFuel();
+      $global_file->set('wire', $fuel); 
+      foreach($fuel as $key => $value) $global_file->set($key, $value); 
+      $global_file->render();
+    }
+  }
+
+  // We don't really need to do anything else here; this file is now autoloaded
+  // thus below we can add another object, that will be 'automagically' loaded
+  // for use in templates
+  //
+  // booyah!
 }
 
 // Include all the important stuff

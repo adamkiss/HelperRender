@@ -17,11 +17,15 @@ class Render {
   /**
    * View as selected by user (if one is given, null otherwise)
    */
-  private static $user_selected_view = null;
+  private static $view = null;
   /**
    * Master Template object
    */
   private static $master_template = null;
+  /**
+   * 'Global' file (call in each page call)
+   */
+  private static $global_file = '_global';
 
   ////////////////////////////////// SINGLETON INIT /////////////////////////////////
 
@@ -113,8 +117,8 @@ class Render {
     // create single master template
     self::$master_template = new TemplateFile(
       is_null(self::$view) ?
-        self::$view :
-        self::$default_view
+        self::get_file(self::$default_view) :
+        self::get_file(self::$view)
     );
   }
 
@@ -254,7 +258,7 @@ class Render {
     return implode('', $result);
   }
 
-  public static function collection($filename, $collection, $object_name = 'item'$separator_filename = false){
+  public static function collection($filename, $collection, $object_name = 'item', $separator_filename = false){
     return self::loop($filename, $collection, $object_name, $separator_filename);
   }
 
@@ -267,10 +271,11 @@ class Render {
    * @return contents of the master template
    */
   public static function master($data = array(), $echo=true) {
-    //make init option: if file wasn't initialized, initialize it for developer
-    if (!self::$master_template) { self::init(); }
+    self::init_master_on_demand();
 
-    self::$master_template->set('data', $data);
+
+    self::$master_template->setArray($data);
+
     if ($echo)
       echo self::$master_template->render();
     else
@@ -284,7 +289,7 @@ class Render {
    */
   public static function auto($additional_data = array(), $filename=null){
     self::master(array(
-      'content'=>Render::page($additional_data, $filename)
+      'content'=>self::page($additional_data, $filename)
     ));
   }
 }
